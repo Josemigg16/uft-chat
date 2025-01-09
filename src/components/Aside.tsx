@@ -1,13 +1,11 @@
 'use client'
 import { useChatsStore } from '@/stores/chats-store'
-import { useMessagesStore } from '@/stores/messages-store'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import ChatLi from './ChatLi'
+import { redirect } from 'next/navigation'
 
 export default function Aside() {
-  const pathname = usePathname()
   const chats = useChatsStore((state) => state.chats)
-  const setMessages = useMessagesStore((state) => state.setMessages)
+  const addChat = useChatsStore((state) => state.addChat)
   return (
     <aside className="flex h-[calc(100vh-115px)] flex-col border-r-2 bg-[#540b1d]">
       <section className="row-span-4 flex-grow border-b-2 p-3">
@@ -16,25 +14,21 @@ export default function Aside() {
         </h3>
         <ul className="overflow-y-auto">
           {chats
-            ? chats.map((chat) => (
-                <Link
-                  className={`block overflow-hidden text-ellipsis text-nowrap rounded px-3 py-2 text-lg font-medium text-gray-300 hover:bg-red-950 ${pathname.includes(chat.sessionId) && 'bg-red-950'}`}
-                  key={chat.sessionId}
-                  href={`/chat/${chat.sessionId}`}
-                  onClick={() =>
-                    chat.sessionId !== pathname.split('/')[2] && setMessages([])
-                  }
-                >
-                  {chat.name}
-                </Link>
-              ))
+            ? chats.map((chat) => <ChatLi key={chat.sessionId} chat={chat} />)
             : []}
         </ul>
       </section>
-      <div className="grid place-content-center bg-white p-3 grid-cols-1">
+      <div className="grid grid-cols-1 place-content-center bg-white p-3">
         <button
-          className="mt-[1.5rem] block h-[60px] w-full border-2 border-dashed py-2 pl-2 text-lg transition-all"
-          disabled
+          onClick={() => {
+            const sessionId = crypto.randomUUID()
+            addChat({
+              sessionId,
+              name: 'Nuevo chat',
+            })
+            redirect(`${sessionId}?editing=true`)
+          }}
+          className="mt-[1.5rem] block h-[60px] w-full border-2 border-dashed py-2 pl-2 text-lg transition-all hover:bg-gray-200 active:scale-[.98]"
         >
           Nuevo chat
         </button>
