@@ -18,3 +18,21 @@ ul::-webkit-scrollbar-thumb:hover {
 ul::-webkit-scrollbar-thumb:active {
   background-color: #999999;
 }
+
+.typing-animation {
+  display: inline-block;
+  overflow: hidden;
+  animation: typing 1s steps(3, end) infinite;
+}
+
+@keyframes typing {
+  0% {
+    width: 0;
+  }
+  50% {
+    width: 0.75em;
+  }
+  100% {
+    width: 0;
+  }
+}
