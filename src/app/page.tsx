@@ -14,7 +14,7 @@ export default function Home() {
       sessionId,
       name: 'Nuevo chat',
     })
-    redirect(`chat/${sessionId}`)
+    redirect(`/chat/${sessionId}`)
   }
   return (
     <form

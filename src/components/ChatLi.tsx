@@ -16,15 +16,16 @@ export default function ChatLi({ chat }: { chat: Chat }) {
   const inputRef = useRef<HTMLInputElement>(null)
   useEffect(() => {
     if (
-      window.location.search.includes('editing=true') &&
+      location.search.includes('editing=true') &&
       location.pathname.includes(chat.sessionId)
     ) {
+      console.log('editing')
       setIsEditing(true)
       setInterval(() => {
         inputRef.current?.focus()
-      }, 100)
+      }, 500)
     }
-  }, [chat.sessionId])
+  }, [pathname])
 
   return (
     <Link
@@ -38,7 +39,7 @@ export default function ChatLi({ chat }: { chat: Chat }) {
       {isEditing ? (
         <input
           ref={inputRef}
-          className="bg-transparent outline-none"
+          className="max-w-[50px] bg-transparent outline-none lg:max-w-[150px]"
           onChange={(e) => setChatName(e.target.value)}
           value={chatName}
           onKeyDown={(e) => {
@@ -48,7 +49,7 @@ export default function ChatLi({ chat }: { chat: Chat }) {
                 name: chatName,
               })
               setIsEditing(false)
-              redirect(`${chat.sessionId}`)
+              redirect(`/chat/${chat.sessionId}`)
             }
           }}
           onBlur={() => {
@@ -57,11 +58,13 @@ export default function ChatLi({ chat }: { chat: Chat }) {
               name: chatName,
             })
             setIsEditing(false)
-            redirect(`${chat.sessionId}`)
+            redirect(`/chat/${chat.sessionId}`)
           }}
         />
       ) : (
-        <span>{chat.name}</span>
+        <span className="max-w-[50px] text-ellipsis text-nowrap lg:max-w-[150px] block overflow-hidden">
+          {chat.name}
+        </span>
       )}
       <div>
         <button

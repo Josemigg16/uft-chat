@@ -20,13 +20,15 @@ export default function Aside() {
       </section>
       <div className="grid grid-cols-1 place-content-center bg-white p-3">
         <button
-          onClick={() => {
+          onClick={(e) => {
+            e.currentTarget.disabled = true
             const sessionId = crypto.randomUUID()
             addChat({
               sessionId,
               name: 'Nuevo chat',
             })
-            redirect(`${sessionId}?editing=true`)
+            e.currentTarget.disabled = false
+            redirect(`/chat/${sessionId}?editing=true`)
           }}
           className="mt-[1.5rem] block h-[60px] w-full border-2 border-dashed py-2 pl-2 text-lg transition-all hover:bg-gray-200 active:scale-[.98]"
         >
