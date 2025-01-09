@@ -2,6 +2,7 @@
 import { getChat } from '@/app/actions/getChat'
 import { useMessagesStore } from '@/stores/messages-store'
 import { use, useEffect } from 'react'
+import Markdown from 'markdown-to-jsx'
 
 export default function Page({
   params,
@@ -24,7 +25,7 @@ export default function Page({
       }`}
       key={crypto.randomUUID()}
     >
-      {message.content}
+      <Markdown>{message.content}</Markdown>
     </div>
   ))
 }

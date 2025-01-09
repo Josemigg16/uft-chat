@@ -5,14 +5,17 @@ import { useMessagesStore } from '@/stores/messages-store'
 import { faCircleArrowRight } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { usePathname } from 'next/navigation'
-import { FormEvent, useRef } from 'react'
+import { FormEvent, useRef, useState } from 'react'
 
-export default function Page({ children }: { children: React.ReactNode }) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   const input = useRef(null)
   const sessionId = usePathname().split('/')[2]
+  const [isLoading, setIsLoading] = useState(false)
   const addMessage = useMessagesStore((state) => state.addMessage)
+  const chatRef = useRef<HTMLDivElement>(null)
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
+    setIsLoading(true)
     if (!input.current) return
     const message = (input.current as HTMLInputElement).value
     if (!message) return
@@ -21,6 +24,12 @@ export default function Page({ children }: { children: React.ReactNode }) {
       role: 'user',
       sentAt: Date.now(),
     })
+    setTimeout(() => {
+      chatRef.current?.scrollTo({
+        top: chatRef.current.scrollHeight,
+        behavior: 'smooth',
+      })
+    }, 100)
     ;(input.current as HTMLInputElement).value = ''
     chat({ message, sessionId }).then((res) => {
       console.log(res)
@@ -29,11 +38,27 @@ export default function Page({ children }: { children: React.ReactNode }) {
         role: 'assistant',
         sentAt: Date.now(),
       })
+      setIsLoading(false)
+      setTimeout(() => {
+        chatRef.current?.scrollTo({
+          top: chatRef.current.scrollHeight,
+          behavior: 'smooth',
+        })
+      }, 100)
     })
   }
   return (
     <div className="flex h-[calc(100vh-115px)] flex-col justify-between">
-      <article className="flex-grow overflow-y-auto">{children}</article>
+      <article ref={chatRef} className="flex-grow overflow-y-auto">
+        {children}
+        {isLoading && (
+          <div className="m-4 text-left">
+            <div className="inline-block rounded-lg bg-gray-200 p-3 text-black">
+              <span className="typing-animation text-2xl">...</span>
+            </div>
+          </div>
+        )}
+      </article>
       <form
         onSubmit={handleSubmit}
         className="mx-auto grid w-3/4 grid-cols-1 place-content-center"
