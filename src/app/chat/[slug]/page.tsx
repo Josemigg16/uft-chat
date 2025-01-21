@@ -16,7 +16,7 @@ export default function Page({
     const chatPromise = getChat({ sessionId: slug })
     chatPromise.then((data) => {
       setMessages(data)
-    })
+    }).catch(()=> alert('Demasiados mensajes'))
   }, [setMessages, slug])
   return messages.map((message) => (
     <div
