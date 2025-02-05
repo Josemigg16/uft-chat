@@ -23,5 +23,6 @@ export async function chat({ message, sessionId }: Props) {
     }
   )
   const data = await res.json()
+  if(data.error) return 'Ha ocurrido un error, intente de nuevo'
   return data.textResponse
 }

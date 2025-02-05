@@ -14,9 +14,11 @@ export default function Page({
   const setMessages = useMessagesStore((state) => state.setMessages)
   useEffect(() => {
     const chatPromise = getChat({ sessionId: slug })
-    chatPromise.then((data) => {
-      setMessages(data)
-    }).catch(()=> alert('Demasiados mensajes'))
+    chatPromise
+      .then((data) => {
+        setMessages(data)
+      })
+      .catch((error) => alert(error.message))
   }, [setMessages, slug])
   return messages.map((message) => (
     <div

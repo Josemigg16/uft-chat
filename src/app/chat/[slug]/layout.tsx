@@ -46,6 +46,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         })
       }, 100)
     })
+    .catch((error) => alert(error.message))
   }
   return (
     <div className="flex h-[calc(100vh-115px)] flex-col justify-between">
